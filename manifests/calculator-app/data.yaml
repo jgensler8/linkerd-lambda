@@ -2,9 +2,9 @@
 replicas: "1"
 logLevel: 6
 environment: "preprod"
-teamName: "team-multiplication-operator"
-serviceName: "multiplication-operator-build-123"
+teamName: "team-gateway"
+serviceName: "gateway"
 imageRepo: "jgensl2"
-imageService: "multiplication-operator"
-imageTag: "v0.1.1"
+imageService: "gateway"
+imageTag: "v0.1.3"
 portName: "my-http"

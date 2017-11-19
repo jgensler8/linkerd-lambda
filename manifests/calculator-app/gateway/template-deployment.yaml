@@ -28,10 +28,19 @@ spec:
         - -logtostderr
         - -port=8081
         env:
-        - name: HTTP_PROXY
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
+        # Only need *_PROXY variables if using Linkerd
+        # - name: HTTP_PROXY
+        #   valueFrom:
+        #     fieldRef:
+        #       fieldPath: status.hostIP
+        # - name: HTTPS_PROXY
+        #   valueFrom:
+        #     fieldRef:
+        #       fieldPath: status.hostIP
+        # - name: HTTP_PROXY
+        #   value: 192.168.99.100:31140
+        # - name: HTTPS_PROXY
+        #   value: 192.168.99.100:31140
 
         # These variables are used when only linkerd is used to integrate
         # - name: GATEWAY_TOKENIZERSERVICE
@@ -46,26 +55,43 @@ spec:
         #   value: http://division-operator/operate
 
         # These variables are used with Part 3's NGINX Gateway example
-        - name: GATEWAY_TOKENIZERSERVICE
-          value: http://api.calculator.com/api/tokenizer/tokenize
-        - name: GATEWAY_ADDITIONSERVICE
-          value: http://api.calculator.com/api/addition-operator/operate
-        - name: GATEWAY_SUBTRACTIONSERVICE
-          value: http://api.calculator.com/api/subtraction-operator/operate
-        - name: GATEWAY_MULTIPLICATIONSERVICE
-          value: http://api.calculator.com/api/multiplication-operator/operate
-        - name: GATEWAY_DIVISIONSERVICE
-          value: http://division-operator.calculator.com/operate
+        # - name: GATEWAY_TOKENIZERSERVICE
+        #   value: http://api.calculator.com/api/tokenizer/tokenize
+        # - name: GATEWAY_ADDITIONSERVICE
+        #   value: http://api.calculator.com/api/addition-operator/operate
+        # - name: GATEWAY_SUBTRACTIONSERVICE
+        #   value: http://api.calculator.com/api/subtraction-operator/operate
+        # - name: GATEWAY_MULTIPLICATIONSERVICE
+        #   value: http://api.calculator.com/api/multiplication-operator/operate
+        # - name: GATEWAY_DIVISIONSERVICE
+        #   value: http://division-operator.calculator.com/operate
 
         # These variables would be used if we weren't using linkerd and
         # each service was in its own namespace
-        # - name: GATEWAY_TOKENIZERSERVICE
-        #   value: http://tokenizer.team-tokenizer:80/tokenize
-        # - name: GATEWAY_ADDITIONSERVICE
-        #   value: http://addition-operator.team-addition-operator:80/operate
-        # - name: GATEWAY_SUBTRACTIONSERVICE
-        #   value: http://subtraction-operator.team-subtraction-operator:80/operate
-        # - name: GATEWAY_MULTIPLICATIONSERVICE
-        #   value: http://multiplication-operator.team-multiplication-operator:80/operate
-        # - name: GATEWAY_DIVISIONSERVICE
-        #   value: http://division-operator.team-division-operator:80/operate
+        - name: GATEWAY_TOKENIZERSERVICE
+          value: http://tokenizer.team-tokenizer.svc.cluster.local:80/tokenize
+        - name: GATEWAY_ADDITIONSERVICE
+          value: http://addition-operator.team-addition-operator.svc.cluster.local:443/testing/operate
+          # value: https://XXXXXXXXXX.execute-api.us-west-2.amazonaws.com:443/testing/operate
+          # value: http://XXXXXXXXXX.execute-api.us-west-2.amazonaws.com:443/testing/operate
+        - name: GATEWAY_SUBTRACTIONSERVICE
+          value: http://subtraction-operator.team-subtraction-operator.svc.cluster.local:80/operate
+        - name: GATEWAY_MULTIPLICATIONSERVICE
+          value: http://multiplication-operator.team-multiplication-operator.svc.cluster.local:80/operate
+        - name: GATEWAY_DIVISIONSERVICE
+          value: http://division-operator.team-division-operator.svc.cluster.local:80/operate
+
+        # - name: SSL_CERT_FILE
+        #   value: /usr/share/ca-certificates/mozilla/Starfield_Root_Certificate_Authority_-_G2.crt
+        volumeMounts:
+        - name: etc-ssl-certs
+          mountPath: /etc/ssl/certs
+        - name: usr-share-ca-certs
+          mountPath: /usr/share/ca-certificates
+      volumes:
+      - name: etc-ssl-certs
+        hostPath:
+          path: /etc/ssl/certs
+      - name: usr-share-ca-certs
+        hostPath:
+          path: /usr/share/ca-certificates

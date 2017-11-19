@@ -1,0 +1,12 @@
+---
+apiVersion: config.istio.io/v1alpha2
+kind: EgressRule
+metadata:
+  name: "addition-operator"
+  namespace: "team-addition-operator"
+spec:
+  destination:
+    service: XXXXXXXXXX.execute-api.us-west-2.amazonaws.com
+  ports:
+    - port: 443
+      protocol: https

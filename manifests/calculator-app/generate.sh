@@ -2,7 +2,8 @@
 
 SCRIPT_ROOT="$PWD/$(dirname $0)"
 
-SERVICES="tokenizer division-operator multiplication-operator subtraction-operator addition-operator"
+# SERVICES="tokenizer division-operator multiplication-operator subtraction-operator addition-operator"
+SERVICES="tokenizer division-operator multiplication-operator subtraction-operator"
 
 if [ -z "${ENVIRONMENT}" ] ; then
   echo "ENVIRONMENT needs to be set."
@@ -41,11 +42,12 @@ teamName: "team-$1"
 serviceName: "$2"
 imageRepo: "jgensl2"
 imageService: "$3"
-imageTag: "v0.1.1"
+imageTag: "v0.1.3"
 portName: "my-http"
 EOF
 
-  for type in "deployment" "ingress" "service" "namespace" ; do
+  # for type in "deployment" "ingress" "service" "namespace" ; do
+  for type in "deployment" "service" "namespace" ; do
     templateResource "${DATA_FILE}" "$4/template-${type}.yaml" "$5/$1-$2-${type}.yaml"
   done
 }
@@ -55,4 +57,4 @@ for service in ${SERVICES} ; do
 done
 
 templateService "gateway" "gateway" "gateway" "${SCRIPT_ROOT}/gateway" "${TEMPLATE_DEST_DIR}"
-templateService "multiplication-operator" "multiplication-operator-build-123" "multiplication-operator" "${TEMPLATE_SRC_DIR}" "${TEMPLATE_DEST_DIR}"
+# templateService "multiplication-operator" "multiplication-operator-build-123" "multiplication-operator" "${TEMPLATE_SRC_DIR}" "${TEMPLATE_DEST_DIR}"

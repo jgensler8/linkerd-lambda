@@ -1,0 +1,30 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: "addition-operator"
+  namespace: "team-addition-operator"
+  annotations:
+    kubernetes.io/ingress.class: "linkerd"
+  labels:
+    app: "addition-operator"
+    environment: "preprod"
+spec:
+  rules:
+  - host: "addition-operator"
+    http:
+      paths:
+      - backend:
+          serviceName: "addition-operator"
+          servicePort: "my-http"
+  # The following config would be used without any rewrite in NGINX.
+  # If you use the following, you will end up with a 404 from Go rather than NGINX.
+  # We would have to use path to identify us but linkerd doesn't support rewrites *in Ingress objects*
+  # See: https://github.com/kubernetes/contrib/tree/d3b2b2d2b99abaf74712db9fce2dabf1344f29e5/ingress/controllers/nginx/examples/rewrite
+  # - host: "api.calculator.com"
+  #   http:
+  #     paths:
+  #     - path: "/api/addition-operator/operate"
+  #       backend:
+  #         serviceName: "addition-operator"
+  #         servicePort: "my-http"

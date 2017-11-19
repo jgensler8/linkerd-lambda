@@ -1,0 +1,12 @@
+---
+apiVersion: config.istio.io/v1alpha2
+kind: RouteRule
+metadata:
+  name: "addition-operator"
+  namespace: "team-addition-operator"
+spec:
+  destination:
+    service: XXXXXXXXXX.execute-api.us-west-2.amazonaws.com
+  http_req_timeout:
+    simple_timeout:
+      timeout: 3s
